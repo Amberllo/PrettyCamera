@@ -1,5 +1,6 @@
 package com.prettycamera;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -8,13 +9,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.ImageView;
+import com.squareup.picasso.Picasso;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.io.File;
+
+public class MainActivity extends CameraActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     ImageView img_camera;
 
@@ -43,14 +45,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        img_camera = (ImageView)findViewById(R.id.img_camera);
+        img_camera = (ImageView)findViewById(R.id.main_img_camera);
         img_camera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("点击拍照！");
+//                System.out.println("点击拍照！");
+                camera();
             }
         });
 
+    }
+
+    @Override
+    void onCamera(String path) {
+        Picasso.with(this).load(new File(path)).into(img_camera);
+
+        Intent i = new Intent(this,WaterMarkActivity.class);
+        i.putExtra("path",path);
+        startActivity(i);
     }
 
     @Override
@@ -63,20 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -102,4 +100,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
+
+
+
+
 }
