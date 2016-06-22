@@ -347,16 +347,10 @@ public class PhotoUtils {
         }
     }
 
-    /**
-     * TODO 增加换行 添加水印
-     *
-     * @param str
-     * @param photo
-     */
-    public static Bitmap addWaterMark(Bitmap photo, String str) {
+    public static Bitmap addWaterMark(Bitmap photo, String string, Typeface typeface) {
         Bitmap newBitmap = photo;
         try {
-            if (null == photo || null == str || "".equals(str.trim()))
+            if (null == photo || null == string || "".equals(string.trim()))
                 return null;
             int height = photo.getHeight();
             if (!newBitmap.isMutable()) {
@@ -368,11 +362,11 @@ public class PhotoUtils {
             photoPaint.setFilterBitmap(true);// 过滤一些
 
             TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG);// 设置画笔
-            textPaint.setTextSize(height / 18);// 字体大小
-            textPaint.setTypeface(Typeface.DEFAULT);// 采用默认的宽度
+            textPaint.setTextSize(height / 8);// 字体大小
+            textPaint.setTypeface(typeface);// 艺术字样式
             textPaint.setColor(Color.YELLOW);// 采用的颜色
             StaticLayout layout =
-                    new StaticLayout(str, textPaint, photo.getWidth(), android.text.Layout.Alignment.ALIGN_OPPOSITE,
+                    new StaticLayout(string, textPaint, photo.getWidth(), android.text.Layout.Alignment.ALIGN_OPPOSITE,
                             1.0f, 0.0f, true); // 确定换行
             canvas.translate(0, height - layout.getHeight()); // 设定画布位置
             layout.draw(canvas); // 绘制水印
@@ -381,6 +375,14 @@ public class PhotoUtils {
             return newBitmap;
         }
         return newBitmap;
+    }
+
+    /**
+     * @param string 水印字符
+     * @param photo 原始bitmap
+     */
+    public static Bitmap addWaterMark(Bitmap photo, String string) {
+        return addWaterMark(photo,string,Typeface.DEFAULT);// 采用默认的字体样式
     }
 
     public static Bitmap big(Bitmap bitmap, float scale) {
